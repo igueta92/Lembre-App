@@ -1,0 +1,27 @@
+Create a full-stack web application named “Lembre”, a MicroSaaS targeted towards household task management and emotional interaction between couples or family members. The app should be built using React and Tailwind CSS for frontend, Firebase Authentication for user authentication, and Firebase Firestore for database management.
+
+The application structure must include the following core directories and files: src (App.js, index.js, firebase.js, Routes.jsx, Login.jsx, CriarLar.jsx, Tarefas.jsx, ConvidarMembro.jsx, components folder, styles folder).
+
+User Authentication:
+Implement user sign-up and login functionalities using email/password and Google Authentication provided by Firebase Auth. Ensure persistent sessions, secure logout, and automatic redirects based on authentication state.
+
+Group (“Lar”) Management:
+Users must be able to create a “home” or group entity (“Lar”). On creation, the user automatically becomes the first member of this group. Allow existing users to be invited by email or Firebase UID to join the group, updating the invited user’s account with the new “Lar” reference.
+
+Task Management:
+Tasks must have the following mandatory attributes: title, deadline, created by (user UID), and assigned to (user UID). Optional fields include priority (low, medium, high) and status (completed or pending). Tasks must be associated with their respective “Lar”. Only the assigned user can mark a task as completed. Implement real-time updates using Firestore’s “onSnapshot” to keep task lists synchronized and reactive.
+
+Notifications (Firebase Cloud Messaging):
+Implement push notifications triggered by task-related events. When assigning a task to another user, send a notification with the following message: “Hi, can you do this for me, please?”. When a user completes an assigned task, send a notification to the assigning user with the message: “I’ve finished the task you asked me to do. You can always count on me!”.
+
+Gamification and Ranking:
+Integrate a scoring system where users earn points upon task completion. Create an internal ranking system visible to group members based on these points. Ensure the application maintains a clear and accessible history of completed tasks.
+
+Visual Identity and UX/UI:
+Use the following design specifications: primary color purple (#6B21A8), secondary color pink (#F472B6), white backgrounds, friendly sans-serif fonts such as Inter, Nunito, or Poppins, soft shadows, rounded edges, and overall welcoming, modern aesthetics.
+
+Essential UI messages include: “Hello, welcome to Lembre!”, upon user login; “Home successfully created!” upon creating a group; “User added to your home!” when a new user joins; and “Please log in to continue.” when authentication is required.
+
+Provide full-flow testing scenarios covering user registration, login, creating a home, inviting members, creating tasks, assigning tasks, completing tasks, and verifying real-time notifications and the ranking system.
+
+Optimize for user-friendly interactions, emotional empathy in user communication, clear task visualization, secure authentication, efficient data management, and robust notification handling. Write clean, efficient, and well-commented code to ensure maintainability and clarity for future development.
