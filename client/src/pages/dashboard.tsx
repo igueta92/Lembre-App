@@ -83,10 +83,38 @@ export default function Dashboard() {
             </div>
             
             <nav className="hidden md:flex space-x-8">
-              <a href="#" className="text-gray-600 hover:text-primary font-medium transition-colors">Dashboard</a>
-              <a href="#" className="text-gray-600 hover:text-primary font-medium transition-colors">Tarefas</a>
-              <a href="#" className="text-gray-600 hover:text-primary font-medium transition-colors">Ranking</a>
-              <a href="#" className="text-gray-600 hover:text-primary font-medium transition-colors">Família</a>
+              <button 
+                onClick={() => {
+                  document.getElementById('dashboard-section')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="text-gray-600 hover:text-primary font-medium transition-colors"
+              >
+                Dashboard
+              </button>
+              <button 
+                onClick={() => {
+                  document.getElementById('tasks-section')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="text-gray-600 hover:text-primary font-medium transition-colors"
+              >
+                Tarefas
+              </button>
+              <button 
+                onClick={() => {
+                  document.getElementById('ranking-section')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="text-gray-600 hover:text-primary font-medium transition-colors"
+              >
+                Ranking
+              </button>
+              <button 
+                onClick={() => {
+                  document.getElementById('family-section')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="text-gray-600 hover:text-primary font-medium transition-colors"
+              >
+                Família
+              </button>
             </nav>
             
             <div className="flex items-center space-x-4">
@@ -115,7 +143,7 @@ export default function Dashboard() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
-        <div className="gradient-bg rounded-2xl p-8 mb-8 text-white relative overflow-hidden">
+        <div id="dashboard-section" className="gradient-bg rounded-2xl p-8 mb-8 text-white relative overflow-hidden">
           <div className="relative z-10">
             <h2 className="text-3xl font-bold mb-2">
               Olá, {user?.firstName || user?.email?.split('@')[0] || 'amigo'}! 👋
@@ -133,6 +161,17 @@ export default function Dashboard() {
               </Button>
               <Button 
                 variant="secondary"
+                onClick={() => {
+                  if (user?.homeId) {
+                    const inviteUrl = `${window.location.origin}/invite/${user.homeId}`;
+                    navigator.clipboard.writeText(inviteUrl).then(() => {
+                      toast({
+                        title: "Link copiado!",
+                        description: "O link de convite foi copiado para a área de transferência.",
+                      });
+                    });
+                  }
+                }}
                 className="bg-white bg-opacity-20 text-white hover:bg-opacity-30 transition-all duration-200"
               >
                 <UserPlus className="h-4 w-4 mr-2" />
@@ -146,7 +185,7 @@ export default function Dashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Tasks Section */}
-          <div className="lg:col-span-2">
+          <div id="tasks-section" className="lg:col-span-2">
             <Card className="shadow-lg">
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -182,10 +221,14 @@ export default function Dashboard() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Family Ranking */}
-            <FamilyRanking ranking={ranking || []} isLoading={rankingLoading} />
+            <div id="ranking-section">
+              <FamilyRanking ranking={ranking || []} isLoading={rankingLoading} />
+            </div>
             
             {/* Family Members */}
-            <FamilyMembers homeData={homeData} />
+            <div id="family-section">
+              <FamilyMembers homeData={homeData} />
+            </div>
             
             {/* Quick Stats */}
             <Card className="shadow-lg">

@@ -14,8 +14,9 @@ import {
   type HomeWithMembers,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
+import { alias } from "drizzle-orm/pg-core";
 
 export interface IStorage {
   // User operations (mandatory for Replit Auth)
@@ -41,6 +42,9 @@ export interface IStorage {
   updateUserPoints(userId: string, points: number): Promise<User>;
   getHomeRanking(homeId: string): Promise<User[]>;
 }
+
+const assigneeUsers = alias(users, "assigneeUsers");
+const creatorUsers = alias(users, "creatorUsers");
 
 export class DatabaseStorage implements IStorage {
   // User operations
@@ -117,13 +121,13 @@ export class DatabaseStorage implements IStorage {
     const result = await db
       .select({
         task: tasks,
-        creator: users,
-        assignee: users,
+        creator: creatorUsers,
+        assignee: assigneeUsers,
         home: homes,
       })
       .from(tasks)
-      .innerJoin(users, eq(tasks.createdBy, users.id))
-      .innerJoin(users, eq(tasks.assignedTo, users.id))
+      .innerJoin(creatorUsers, eq(tasks.createdBy, creatorUsers.id))
+      .innerJoin(assigneeUsers, eq(tasks.assignedTo, assigneeUsers.id))
       .innerJoin(homes, eq(tasks.homeId, homes.id))
       .where(eq(tasks.homeId, homeId))
       .orderBy(desc(tasks.createdAt));
@@ -140,13 +144,13 @@ export class DatabaseStorage implements IStorage {
     const [result] = await db
       .select({
         task: tasks,
-        creator: users,
-        assignee: users,
+        creator: creatorUsers,
+        assignee: assigneeUsers,
         home: homes,
       })
       .from(tasks)
-      .innerJoin(users, eq(tasks.createdBy, users.id))
-      .innerJoin(users, eq(tasks.assignedTo, users.id))
+      .innerJoin(creatorUsers, eq(tasks.createdBy, creatorUsers.id))
+      .innerJoin(assigneeUsers, eq(tasks.assignedTo, assigneeUsers.id))
       .innerJoin(homes, eq(tasks.homeId, homes.id))
       .where(eq(tasks.id, id));
 
@@ -192,13 +196,13 @@ export class DatabaseStorage implements IStorage {
     const result = await db
       .select({
         task: tasks,
-        creator: users,
-        assignee: users,
+        creator: creatorUsers,
+        assignee: assigneeUsers,
         home: homes,
       })
       .from(tasks)
-      .innerJoin(users, eq(tasks.createdBy, users.id))
-      .innerJoin(users, eq(tasks.assignedTo, users.id))
+      .innerJoin(creatorUsers, eq(tasks.createdBy, creatorUsers.id))
+      .innerJoin(assigneeUsers, eq(tasks.assignedTo, assigneeUsers.id))
       .innerJoin(homes, eq(tasks.homeId, homes.id))
       .where(eq(tasks.assignedTo, userId))
       .orderBy(desc(tasks.createdAt));
@@ -216,7 +220,7 @@ export class DatabaseStorage implements IStorage {
     const [user] = await db
       .update(users)
       .set({ 
-        points: db.raw(`points + ${pointsToAdd}`),
+        points: sql`${users.points} + ${pointsToAdd}`,
         updatedAt: new Date(),
       })
       .where(eq(users.id, userId))

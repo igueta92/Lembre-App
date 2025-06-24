@@ -53,8 +53,16 @@ export default function FamilyMembers({ homeData }: FamilyMembersProps) {
   const copyInviteLink = () => {
     if (homeData) {
       const inviteUrl = `${window.location.origin}/invite/${homeData.id}`;
-      navigator.clipboard.writeText(inviteUrl);
-      // You could add a toast notification here
+      navigator.clipboard.writeText(inviteUrl).then(() => {
+        // Create a temporary toast notification
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+        toast.textContent = 'Link de convite copiado!';
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 3000);
+      });
     }
   };
 
