@@ -42,6 +42,10 @@ export default function Dashboard() {
     enabled: !!user?.homeId,
     retry: false,
   });
+  
+  // Debug: Log homeData to see what we're getting
+  console.log("HomeData in Dashboard:", homeData);
+  console.log("User data:", user);
 
   const { data: ranking, isLoading: rankingLoading } = useQuery({
     queryKey: ["/api/homes", user?.homeId, "ranking"].filter(Boolean),
