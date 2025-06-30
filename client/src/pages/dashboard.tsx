@@ -32,23 +32,19 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
-  const { data: tasks, isLoading: tasksLoading } = useQuery({
+  const { data: tasks, isLoading: tasksLoading } = useQuery<any[]>({
     queryKey: ["/api/tasks"],
     retry: false,
   });
 
-  const { data: homeData, isLoading: homeLoading } = useQuery({
-    queryKey: ["/api/homes", user?.homeId].filter(Boolean),
+  const { data: homeData, isLoading: homeLoading } = useQuery<any>({
+    queryKey: [`/api/homes/${user?.homeId}`],
     enabled: !!user?.homeId,
     retry: false,
   });
-  
-  // Debug: Log homeData to see what we're getting
-  console.log("HomeData in Dashboard:", homeData);
-  console.log("User data:", user);
 
-  const { data: ranking, isLoading: rankingLoading } = useQuery({
-    queryKey: ["/api/homes", user?.homeId, "ranking"].filter(Boolean),
+  const { data: ranking, isLoading: rankingLoading } = useQuery<any[]>({
+    queryKey: [`/api/homes/${user?.homeId}/ranking`],
     enabled: !!user?.homeId,
     retry: false,
   });

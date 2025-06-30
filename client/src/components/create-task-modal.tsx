@@ -40,9 +40,6 @@ type CreateTaskForm = z.infer<typeof createTaskSchema>;
 export default function CreateTaskModal({ isOpen, onClose, homeMembers }: CreateTaskModalProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
-  // Debug: Log homeMembers to see what we're getting
-  console.log("HomeMembers in CreateTaskModal:", homeMembers);
 
   const form = useForm<CreateTaskForm>({
     resolver: zodResolver(createTaskSchema),
