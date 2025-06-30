@@ -55,11 +55,7 @@ export default function CreateTaskModal({ isOpen, onClose, homeMembers }: Create
 
   const createTaskMutation = useMutation({
     mutationFn: async (data: CreateTaskForm) => {
-      const payload = {
-        ...data,
-        deadline: data.deadline ? new Date(data.deadline).toISOString() : undefined,
-      };
-      const response = await apiRequest("POST", "/api/tasks", payload);
+      const response = await apiRequest("POST", "/api/tasks", data);
       return response.json();
     },
     onSuccess: () => {

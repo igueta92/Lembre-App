@@ -62,6 +62,9 @@ export default function Dashboard() {
   }
 
   const pendingTasks = tasks?.filter((task: any) => task.status === "pending") || [];
+  const userPendingTasks = tasks?.filter((task: any) => 
+    task.status === "pending" && task.assignee.id === user?.id
+  ) || [];
   const todayTasks = pendingTasks.filter((task: any) => {
     if (!task.deadline) return false;
     const today = new Date().toDateString();
@@ -149,7 +152,7 @@ export default function Dashboard() {
               Olá, {user?.firstName || user?.email?.split('@')[0] || 'amigo'}! 👋
             </h2>
             <p className="text-purple-100 mb-6">
-              Você tem {todayTasks.length} tarefas pendentes hoje. Vamos começar?
+              Você tem {userPendingTasks.length} tarefas pendentes no total e {todayTasks.filter((task: any) => task.assignee.id === user?.id).length} para hoje. Vamos começar?
             </p>
             <div className="flex flex-wrap gap-4">
               <Button 
@@ -203,7 +206,7 @@ export default function Dashboard() {
                 </div>
               </CardHeader>
               <CardContent>
-                <TaskList tasks={tasks || []} />
+                <TaskList tasks={tasks || []} currentUserId={user?.id} />
                 
                 <div className="mt-6 text-center">
                   <Button 

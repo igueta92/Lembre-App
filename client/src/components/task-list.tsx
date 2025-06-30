@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { User, Clock, MoreHorizontal, Trophy, CheckCircle } from "lucide-react";
+import { User, Clock, MoreHorizontal, Trophy, CheckCircle, Edit2 } from "lucide-react";
 import { format, isToday, isPast } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -33,9 +33,10 @@ interface Task {
 
 interface TaskListProps {
   tasks: Task[];
+  currentUserId?: string;
 }
 
-export default function TaskList({ tasks }: TaskListProps) {
+export default function TaskList({ tasks, currentUserId }: TaskListProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -193,9 +194,18 @@ export default function TaskList({ tasks }: TaskListProps) {
               {isCompleted && (
                 <Trophy className="h-4 w-4 text-yellow-500" />
               )}
-              <Button variant="ghost" size="sm">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
+              {currentUserId === task.creator.id && !isCompleted && (
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => {
+                    // TODO: Implement edit functionality
+                    console.log("Edit task:", task.id);
+                  }}
+                >
+                  <Edit2 className="h-4 w-4" />
+                </Button>
+              )}
             </div>
           </div>
         );
